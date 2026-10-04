@@ -1,6 +1,7 @@
 package com.doubletake.backend.service;
 
 import com.doubletake.backend.entity.DuoProfile;
+import com.doubletake.backend.repository.DuoMatchRepository;
 import com.doubletake.backend.repository.DuoProfileRepository;
 import org.springframework.stereotype.Service;
 import com.doubletake.backend.repository.DuoSwipeRepository;
@@ -12,12 +13,18 @@ public class DiscoveryService
 {
     private final DuoProfileRepository duoProfileRepository;
     private final DuoSwipeRepository duoSwipeRepository;
+    private final DuoMatchRepository duoMatchRepository;
+    private final DuoProfileService duoProfileService;
 
     public DiscoveryService(final DuoProfileRepository duoProfileRepository,
-                            final DuoSwipeRepository duoSwipeRepository)
+                            final DuoSwipeRepository duoSwipeRepository,
+                            final DuoMatchRepository duoMatchRepository,
+                            final DuoProfileService duoProfileService)
     {
         this.duoProfileRepository = duoProfileRepository;
         this.duoSwipeRepository = duoSwipeRepository;
+        this.duoMatchRepository = duoMatchRepository;
+        this.duoProfileService = duoProfileService;
     }
 
     /**
@@ -57,28 +64,38 @@ public class DiscoveryService
     }
 
     /**
-     * Filters out the current duo so it does not appear in its own discovery feed.
+     * Checks whether two duos are already matched.
      *
-     * @param currentDuoId the ID of the duo currently using discovery
-     * @return a list of duo profiles excluding the current duo
+     * @param duoAId the ID of duo A
+     * @param duoBId the ID of duo B
+     * @return true if a match already exists between the two duos,
+     *         false otherwise
      */
-    public List<DuoProfile> getOtherDuoProfiles(final String currentDuoId)
+    public boolean areAlreadyMatched(final String duoAId,
+                                     final String duoBId)
     {
-        return duoProfileRepository.findAll()
-                .stream()
-                .filter(duoProfile ->
-                        !duoProfile.getDuoId().equals(currentDuoId))
-                .toList();
+        return duoMatchRepository.existsByDuoAIdAndDuoBId(duoAId, duoBId)
+                ||
+                duoMatchRepository.existsByDuoAIdAndDuoBId(duoBId, duoAId);
     }
 
     /**
-     * Retrieves duo profiles that the current duo has not already swiped on.
+     * Retrieves duo profiles that are eligible to appear in the current duo's
+     * discovery feed.
      *
      * @param currentDuoId the ID of the duo currently using discovery
-     * @return a list of other duo profiles that have not already been swiped on
+     * @return a list of eligible duo profiles
      */
-    public List<DuoProfile> getUnswipedDuoProfiles(final String currentDuoId)
+    public List<DuoProfile> getEligibleDuoProfiles(final String currentDuoId)
     {
+        final DuoProfile currentDuo =
+                duoProfileRepository.findById(currentDuoId).orElse(null);
+
+        if(currentDuo == null)
+        {
+            return List.of();
+        }
+
         return duoProfileRepository.findAll()
                 .stream()
                 .filter(duoProfile ->
@@ -87,6 +104,14 @@ public class DiscoveryService
                         !duoSwipeRepository.existsBySwiperDuoIdAndTargetDuoId(
                                 currentDuoId,
                                 duoProfile.getDuoId()))
+                .filter(duoProfile ->
+                        !areAlreadyMatched(
+                                currentDuoId,
+                                duoProfile.getDuoId()))
+                .filter(duoProfile ->
+                        duoProfileService.isCompatibleLookingFor(
+                                currentDuo.getLookingFor(),
+                                duoProfile.getLookingFor()))
                 .toList();
     }
 }
