@@ -11,7 +11,7 @@ const AVATAR_X = { left: [50, 86], right: [258, 294] }
  * overlap filled in pink and a heart in the middle. Used on Welcome and Match.
  * It's decorative, so screen readers skip it; the text around it says the same thing.
  */
-export default function DuoVenn({ leftUsers, rightUsers, theme = 'light' }) {
+export default function DuoVenn({ leftUsers = [], rightUsers = [], theme = 'light' }) {
   // useId gives a unique id, so two of these on one page don't share a clip path.
   const clipId = useId()
   const isDark = theme === 'dark'

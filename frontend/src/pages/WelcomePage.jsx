@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router'
-import Button from './components/Button.jsx'
-import DuoVenn from './components/DuoVenn.jsx'
-import Logo from './components/Logo.jsx'
-
+import Button from '../components/Button.jsx'
+import DuoVenn from '../components/DuoVenn.jsx'
+import Logo from '../components/Logo.jsx'
 import { useCurrentDuo } from '../hooks/useCurrentDuo.js'
 
 export default function WelcomePage() {
