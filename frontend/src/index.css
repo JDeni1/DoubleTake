@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+}@import "tailwindcss";
+
+@theme {
+  --font-sans: "Figtree", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+
+  --color-canvas: #f3f2fa;
+  --color-surface: #ffffff;
+  --color-ink: #1b1838;
+  --color-muted: #625e7c;
+  --color-line: #dedbee;
+
+  --color-brand: #5b3fd9;
+  --color-brand-dark: #4329b8;
+  --color-brand-soft: #e6e0ff;
+
+  --color-spark: #ff5a79;
+  --color-spark-soft: #ffe3e9;
+  --color-spark-dark: #a3203e;
+
+  /* Photo placeholder tints, picked by user ID */
+  --color-tint-lilac: #dcd3ff;
+  --color-tint-peach: #ffd9c7;
+  --color-tint-mint: #cdeedd;
+  --color-tint-sky: #cfe3ff;
+  --color-tint-butter: #fbeab8;
+}
+
+@layer base {
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}

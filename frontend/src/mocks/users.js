@@ -1,8 +1,14 @@
+export const users = [
+  {
+    id: 1,
+    name: "Alex",
+    age: 21,
+    bio: "CS student who loves music.",
+    interests: ["Coding", "Music"],
+    imageUrl: null
+  },
+];
 
-function users() {
-  return (
-    <div>users</div>
-  )
+export function getUserById(id) {
+  return users.find((user) => user.id === Number(id));
 }
-
-export default users
