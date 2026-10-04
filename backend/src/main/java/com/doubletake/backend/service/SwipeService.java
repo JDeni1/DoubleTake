@@ -1,6 +1,7 @@
 package com.doubletake.backend.service;
 
 
+import com.doubletake.backend.entity.DuoMatch;
 import com.doubletake.backend.repository.DuoSwipeRepository;
 import org.springframework.stereotype.Service;
 import com.doubletake.backend.entity.DuoSwipe;
@@ -9,10 +10,13 @@ import com.doubletake.backend.entity.DuoSwipe;
 public class SwipeService
 {
     private final DuoSwipeRepository duoSwipeRepository;
+    private final MatchService matchService;
 
-    public SwipeService(final DuoSwipeRepository duoSwipeRepository)
+    public SwipeService(final DuoSwipeRepository duoSwipeRepository,
+                        final MatchService matchService)
     {
         this.duoSwipeRepository = duoSwipeRepository;
+        this.matchService = matchService;
     }
 
     /**
@@ -32,6 +36,32 @@ public class SwipeService
                         currentDuoId,
                         DuoSwipe.SwipeDirection.LIKE);
     }
+
+    /**
+     * Processes a swipe by saving it and creating a match if both duos liked each other.
+     *
+     * @param currentDuoId the ID of the duo performing the swipe
+     * @param targetDuoId the ID of the duo being swiped on
+     * @param swipeDirection whether the swipe is a LIKE or PASS
+     * @return the created match if a mutual like occurs, otherwise null
+     */
+    public DuoMatch processSwipe(final String currentDuoId,
+                                 final String targetDuoId,
+                                 final DuoSwipe.SwipeDirection swipeDirection)
+    {
+        saveSwipe(currentDuoId,
+                targetDuoId,
+                swipeDirection);
+
+        if(swipeDirection == DuoSwipe.SwipeDirection.LIKE &&
+                hasReciprocalLike(currentDuoId, targetDuoId))
+        {
+            return matchService.createMatch(currentDuoId, targetDuoId);
+        }
+
+        return null;
+    }
+
 
     /**
      * If the person swiped to liked

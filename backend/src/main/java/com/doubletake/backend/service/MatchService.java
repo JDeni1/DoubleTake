@@ -1,64 +1,83 @@
 package com.doubletake.backend.service;
 
-import com.doubletake.backend.entity.DuoProfile;
+import com.doubletake.backend.entity.DuoMatch;
+import com.doubletake.backend.repository.DuoMatchRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Check matches between two duos
- */
-
+@Service
 public class MatchService
 {
+    private final DuoMatchRepository duoMatchRepository;
+
+    public MatchService(final DuoMatchRepository duoMatchRepository)
+    {
+        this.duoMatchRepository = duoMatchRepository;
+    }
+
     /**
-     * If two pairs are matched.
+     * Checks whether two duos have mutually liked each other.
      *
-     * @param duoALikedDuoB
-     * @param duoBLikedDuoA
-     *
-     * @return true when two pairs are matched
+     * @param duoALikedDuoB whether duo A liked duo B
+     * @param duoBLikedDuoA whether duo B liked duo A
+     * @return true if both duos liked each other, false otherwise
      */
     public boolean isMatch(final boolean duoALikedDuoB,
                            final boolean duoBLikedDuoA)
     {
-       return duoALikedDuoB && duoBLikedDuoA;
+        return duoALikedDuoB && duoBLikedDuoA;
     }
 
     /**
-     * Creates a match between two duos
-     * @param duoA
-     * @param duoB
-     */
-    public void createMatch(final DuoProfile duoA,
-                            final DuoProfile duoB)
-    {
-        //need the Match entity
-        //need MatchRepository
-    }
-
-    /**
-     * Checks if this match exisits already
+     * Checks whether a match already exists between two duos.
      *
-     * @param duoAId
-     * @param duoBId
-     * @return
+     * @param duoAId the ID of duo A
+     * @param duoBId the ID of duo B
+     * @return true if the two duos are already matched, false otherwise
      */
-    public boolean matchExists(final boolean duoAId,
-                               final boolean duoBId)
+    public boolean matchExists(final String duoAId,
+                               final String duoBId)
     {
-        //need MatchRepository
-
-        return false;
+        return duoMatchRepository.existsByDuoAIdAndDuoBId(
+                duoAId,
+                duoBId)
+                ||
+                duoMatchRepository.existsByDuoAIdAndDuoBId(
+                        duoBId,
+                        duoAId);
     }
 
-    public List<DuoProfile> getMatchesForDuo(final long duoId)
+    /**
+     * Creates and saves a match between two duos if one does not already exist.
+     *
+     * @param duoAId the ID of duo A
+     * @param duoBId the ID of duo B
+     * @return the newly created match, or null if the match already exists
+     */
+    public DuoMatch createMatch(final String duoAId,
+                                final String duoBId)
     {
-        //ask MatchRepository
+        if(matchExists(duoAId, duoBId))
+        {
+            return null;
+        }
 
-        return null;
+        final DuoMatch duoMatch = new DuoMatch(duoAId, duoBId);
+
+        return duoMatchRepository.save(duoMatch);
     }
 
-
-
-
+    /**
+     * Retrieves all matches involving the specified duo.
+     *
+     * @param duoId the ID of the duo
+     * @return a list of all matches involving the duo
+     */
+    public List<DuoMatch> getMatchesForDuo(final String duoId)
+    {
+        return duoMatchRepository.findByDuoAIdOrDuoBId(
+                duoId,
+                duoId);
+    }
 }
