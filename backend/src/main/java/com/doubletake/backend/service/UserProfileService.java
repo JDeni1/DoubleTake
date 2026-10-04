@@ -1,18 +1,41 @@
 package com.doubletake.backend.service;
 
+import com.doubletake.backend.entity.UserProfile;
+import com.doubletake.backend.repository.UserProfileRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.Map;
 
+@Service
 public class UserProfileService
 {
+    private final UserProfileRepository userProfileRepository;
+
+    public UserProfileService(final UserProfileRepository userProfileRepository)
+    {
+        this.userProfileRepository = userProfileRepository;
+    }
+
+    /**
+     * Finds a user profile in the database using the user's ID.
+     *
+     * @param userId the Supabase user ID associated with the profile
+     * @return the user profile if it exists, otherwise null
+     */
+    public UserProfile getUserProfile(final String userId)
+    {
+        return userProfileRepository.findById(userId).orElse(null);
+    }
+
     /**
      * Validates the user's age.
      *
      * @param age user's age
-     * @return truen if their age is above 18
+     * @return true if their age is not null and is above 18
      */
     public boolean isValidAge(final Integer age)
     {
-        return age >= 18;
+        return age != null && age >= 18;
     }
 
     /**
@@ -21,7 +44,7 @@ public class UserProfileService
      * @param firstName user's first name
      * @return true if first name is not null or blank.
      */
-    public boolean isValidFirstname(final String firstName)
+    public boolean isValidFirstName(final String firstName)
     {
         return firstName != null && !firstName.isBlank();
     }
@@ -29,12 +52,12 @@ public class UserProfileService
     /**
      * Checks if the user is in a duo.
      *
-     * @param duoID duo ID of the duo
+     * @param duoId duo ID of the duo
      * @return true if it is not null or blank
      */
-    public boolean hasDuo(final String duoID)
+    public boolean hasDuo(final String duoId)
     {
-        return duoID != null && !duoID.isBlank();
+        return duoId != null && !duoId.isBlank();
     }
 
     /**
@@ -45,7 +68,7 @@ public class UserProfileService
      */
     public boolean isValidBio(final String bio)
     {
-        return bio ==  null && bio.length() <= 500;
+        return bio == null || bio.length() <= 500;
     }
 
     /**
