@@ -1,6 +1,16 @@
 package com.doubletake.backend.service;
 
+import com.doubletake.backend.entity.Duo;
 import com.doubletake.backend.repository.DuoRepository;
+
+import com.doubletake.backend.dto.DuoResponse;
+import com.doubletake.backend.dto.UserResponse;
+import com.doubletake.backend.entity.DuoProfile;
+import com.doubletake.backend.entity.UserProfile;
+import com.doubletake.backend.repository.DuoProfileRepository;
+import com.doubletake.backend.repository.UserProfileRepository;
+
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -8,10 +18,16 @@ import org.springframework.stereotype.Service;
 public class DuoService
 {
     private final DuoRepository duoRepository;
+    private final DuoProfileRepository duoProfileRepository;
+    private final UserProfileRepository userProfileRepository;
 
-    public DuoService(final DuoRepository duoRepository)
+    public DuoService(final DuoRepository duoRepository,
+                      final DuoProfileRepository duoProfileRepository,
+                      final UserProfileRepository userProfileRepository)
     {
         this.duoRepository = duoRepository;
+        this.duoProfileRepository = duoProfileRepository;
+        this.userProfileRepository = userProfileRepository;
     }
     /**
      * Checks wether two different users can form a duo
@@ -48,5 +64,105 @@ public class DuoService
     public boolean userHasDuo(final String userId)
     {
         return duoRepository.findByUser1IdOrUser2Id(userId, userId).isPresent();
+    }
+
+    /**
+     * Creates and saves a new duo if the two users are different
+     * and neither user already belongs to another duo.
+     *
+     * @param duoId the ID of the new duo
+     * @param userAId the ID of the first user
+     * @param userBId the ID of the second user
+     * @return the created duo, or null if the duo cannot be created
+     */
+    public Duo createDuo(final String duoId,
+                         final String userAId,
+                         final String userBId)
+    {
+        if(!canFormDuo(userAId, userBId))
+        {
+            return null;
+        }
+
+        if(userHasDuo(userAId) || userHasDuo(userBId))
+        {
+            return null;
+        }
+
+        final Duo duo = new Duo(
+                duoId,
+                userAId,
+                userBId);
+
+        return duoRepository.save(duo);
+    }
+
+    /**
+     * Retrieves a duo using its duo ID.
+     *
+     * @param duoId the ID of the duo
+     * @return the duo, or null if no duo exists with the given ID
+     */
+    public Duo getDuo(final String duoId)
+    {
+        return duoRepository.findById(duoId).orElse(null);
+    }
+
+    /**
+     * Retrieves a duo with both user profiles in the format expected
+     * by the frontend.
+     *
+     * @param duoId the ID of the duo
+     * @return the formatted duo response, or null if the duo does not exist
+     */
+    public DuoResponse getDuoResponse(final String duoId)
+    {
+        final Duo duo = duoRepository.findById(duoId).orElse(null);
+
+        if(duo == null)
+        {
+            return null;
+        }
+
+        final UserProfile userA =
+                userProfileRepository.findById(duo.getUser1Id()).orElse(null);
+
+        final UserProfile userB =
+                userProfileRepository.findById(duo.getUser2Id()).orElse(null);
+
+        if(userA == null || userB == null)
+        {
+            return null;
+        }
+
+        final UserResponse userAResponse = new UserResponse(
+                userA.getUserId(),
+                userA.getFirstName(),
+                userA.getAge(),
+                null,
+                userA.getInterests());
+
+        final UserResponse userBResponse = new UserResponse(
+                userB.getUserId(),
+                userB.getFirstName(),
+                userB.getAge(),
+                null,
+                userB.getInterests());
+
+        final DuoProfile duoProfile =
+                duoProfileRepository.findById(duoId).orElse(null);
+
+        String duoBio = "";
+
+        if(duoProfile != null &&
+                duoProfile.getCombinedVibeText() != null)
+        {
+            duoBio = duoProfile.getCombinedVibeText();
+        }
+
+        return new DuoResponse(
+                duo.getDuoId(),
+                duoBio,
+                List.of(userAResponse, userBResponse));
     }
 }
