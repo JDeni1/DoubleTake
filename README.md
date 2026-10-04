@@ -16,7 +16,7 @@ Built in one weekend at **StormHacks 2026**, and submitted to the **TiDB x AI Op
 |---|---|
 | Jill Bautista | Frontend: React app, UI design, mock API, deployment |
 | Annie [Last name] | Backend: Spring Boot API and matching logic |
-| Val [Last name] | Database: TiDB schema, seed data and vector search |
+| Valarie [Last name] | Database: TiDB schema, seed data and vector search |
 
 ## Inspiration
 
