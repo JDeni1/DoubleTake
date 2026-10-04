@@ -1,11 +1,10 @@
 import { Route, Routes } from 'react-router'
 import AppLayout from './components/AppLayout.jsx'
 import RequireDuo from './components/RequireDuo.jsx'
-
-import CreateDuoPage from './pages/CreateDuoPage.jsx'
+import CreateDuoPage from './pages/CreateDuoPages.jsx'
 import DuoSetupPage from './pages/DuoSetupPage.jsx'
 import FeedPage from './pages/FeedPage.jsx'
-import MatchesPage from './pages/MatchesPage.jsx'
+import MatchesPage from './pages/MatchesPages.jsx'
 import MatchPage from './pages/MatchPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ProfileSetupPage from './pages/ProfileSetupPage.jsx'

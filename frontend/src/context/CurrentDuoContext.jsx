@@ -1,12 +1,20 @@
-import { useEffect, useMemo, useState } from 'react'
+import { createContext, useEffect, useMemo, useState } from 'react'
 import { DEMO_DUO_ID, DEMO_USER_ID } from '../lib/constants.js'
-import { CurrentDuoContext } from './currentDuoContext.js'
 
 const USER_STORAGE_KEY = 'doubletake.currentUserId'
 const DUO_STORAGE_KEY = 'doubletake.currentDuoId'
 
 /**
+ * Holds who is using the app right now (there's no login in the MVP).
+ * Read it anywhere with the useCurrentDuo() hook.
+ */
+// eslint-disable-next-line react-refresh/only-export-components
+export const CurrentDuoContext = createContext(null)
+
+/**
  * Reads a saved id from the browser, so a page refresh doesn't log you out.
+ * @param {string} key localStorage key.
+ * @returns {number|null} The saved id, or null if there isn't one.
  */
 function readStoredId(key) {
   try {
@@ -19,6 +27,9 @@ function readStoredId(key) {
 
 /**
  * Saves an id in the browser, or removes it when the id is null.
+ * @param {string} key localStorage key.
+ * @param {number|null} id
+ * @returns {void}
  */
 function writeStoredId(key, id) {
   try {
@@ -35,6 +46,10 @@ function writeStoredId(key, id) {
 /**
  * Shares the current user and duo with every screen.
  * Wrap the whole app in this once, in main.jsx.
+ *
+ * @param {object} props
+ * @param {import('react').ReactNode} props.children The rest of the app.
+ * @returns {JSX.Element}
  */
 export default function CurrentDuoProvider({ children }) {
   const [currentUserId, setCurrentUserId] = useState(() => readStoredId(USER_STORAGE_KEY))
