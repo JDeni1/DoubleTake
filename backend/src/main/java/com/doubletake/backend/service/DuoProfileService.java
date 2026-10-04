@@ -1,11 +1,33 @@
 package com.doubletake.backend.service;
 
 import com.doubletake.backend.entity.DuoProfile;
+import com.doubletake.backend.repository.DuoProfileRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Service
 public class DuoProfileService
 {
+    private final DuoProfileRepository duoProfileRepository;
+
+    public DuoProfileService(final DuoProfileRepository duoProfileRepository)
+    {
+        this.duoProfileRepository = duoProfileRepository;
+    }
+
+    /**
+     * Finds a duo profile in the database using the duo's ID.
+     *
+     * @param duoId the ID of the duo
+     * @return the duo profile if it exists, otherwise null
+     */
+    public DuoProfile getDuoProfile(final String duoId)
+    {
+        return duoProfileRepository.findById(duoId).orElse(null);
+    }
+
+
     /**
      * Checks whether the selected age range is valid for duo preferences.
      *
@@ -70,5 +92,16 @@ public class DuoProfileService
     {
         return vibeVector != null &&
                 !vibeVector.isBlank();
+    }
+
+    /**
+     * Saves a new duo profile or updates an existing duo profile in the database.
+     *
+     * @param duoProfile the duo profile to save
+     * @return the saved duo profile
+     */
+    public DuoProfile saveDuoProfile(final DuoProfile duoProfile)
+    {
+        return duoProfileRepository.save(duoProfile);
     }
 }
