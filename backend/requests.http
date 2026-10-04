@@ -1,0 +1,183 @@
+POST http://localhost:8080/api/duos
+Content-Type: application/json
+
+{
+  "duoId": "test-duo-001",
+  "userAId": "test-user-a",
+  "userBId": "test-user-b"
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "userId": "test-user-c",
+  "firstName": "Annie",
+  "age": 21,
+  "bio": "Testing user profile creation",
+  "interests": {
+    "music": true,
+    "hiking": true
+  }
+}
+
+###
+POST http://localhost:8080/api/duo-profiles
+Content-Type: application/json
+
+{
+  "duoId": "test-duo-001",
+  "lookingFor": "DOUBLE_DATE",
+  "minAge": 18,
+  "maxAge": 30,
+  "promptAnswers": {
+    "idealDate": "Coffee and a walk"
+  },
+  "combinedVibeText": "Relaxed, social, and outdoorsy"
+}
+
+###
+GET http://localhost:8080/api/discovery/test-duo-001
+
+###
+POST http://localhost:8080/api/duos
+Content-Type: application/json
+
+{
+  "duoId": "test-duo-002",
+  "userAId": "test-user-d",
+  "userBId": "test-user-e"
+}
+
+###
+POST http://localhost:8080/api/duo-profiles
+Content-Type: application/json
+
+{
+  "duoId": "test-duo-002",
+  "lookingFor": "DOUBLE_DATE",
+  "minAge": 18,
+  "maxAge": 30,
+  "promptAnswers": {
+    "idealDate": "Dinner and arcade"
+  },
+  "combinedVibeText": "Fun, outgoing, and competitive"
+}
+
+###
+POST http://localhost:8080/api/swipes
+Content-Type: application/json
+
+{
+  "currentDuoId": "test-duo-001",
+  "targetDuoId": "test-duo-002",
+  "swipeDirection": "LIKE"
+}
+
+###
+POST http://localhost:8080/api/swipes
+Content-Type: application/json
+
+{
+  "currentDuoId": "test-duo-002",
+  "targetDuoId": "test-duo-001",
+  "swipeDirection": "LIKE"
+}
+
+###
+GET http://localhost:8080/api/matches/test-duo-001
+
+###
+GET http://localhost:8080/api/duos/test-duo-001
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "userId": "test-user-a",
+  "firstName": "Annie",
+  "age": 21,
+  "bio": "Likes hiking and coffee",
+  "interests": {
+    "hiking": true,
+    "coffee": true
+  }
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "userId": "test-user-b",
+  "firstName": "Jill",
+  "age": 22,
+  "bio": "Likes music and games",
+  "interests": {
+    "music": true,
+    "games": true
+  }
+}
+
+###
+GET http://localhost:8080/api/duos/test-duo-001/feed
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "userId": "test-user-f",
+  "firstName": "Maya",
+  "age": 23,
+  "bio": "Likes climbing and coffee",
+  "interests": {
+    "climbing": true,
+    "coffee": true
+  }
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "userId": "test-user-g",
+  "firstName": "Sarah",
+  "age": 22,
+  "bio": "Likes hiking and food",
+  "interests": {
+    "hiking": true,
+    "food": true
+  }
+}
+
+###
+POST http://localhost:8080/api/duos
+Content-Type: application/json
+
+{
+  "duoId": "test-duo-003",
+  "userAId": "test-user-f",
+  "userBId": "test-user-g"
+}
+
+###
+POST http://localhost:8080/api/duo-profiles
+Content-Type: application/json
+
+{
+  "duoId": "test-duo-003",
+  "lookingFor": "DOUBLE_DATE",
+  "minAge": 18,
+  "maxAge": 30,
+  "promptAnswers": {
+    "idealDate": "Coffee and hiking"
+  },
+  "combinedVibeText": "Outdoorsy, relaxed, and adventurous"
+}
+
+###
+GET http://localhost:8080/api/duos/test-duo-001/feed

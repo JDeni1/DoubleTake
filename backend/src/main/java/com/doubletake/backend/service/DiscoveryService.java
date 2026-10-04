@@ -1,5 +1,6 @@
 package com.doubletake.backend.service;
 
+import com.doubletake.backend.dto.DuoResponse;
 import com.doubletake.backend.entity.DuoProfile;
 import com.doubletake.backend.repository.DuoMatchRepository;
 import com.doubletake.backend.repository.DuoProfileRepository;
@@ -15,16 +16,19 @@ public class DiscoveryService
     private final DuoSwipeRepository duoSwipeRepository;
     private final DuoMatchRepository duoMatchRepository;
     private final DuoProfileService duoProfileService;
+    private final DuoService duoService;
 
     public DiscoveryService(final DuoProfileRepository duoProfileRepository,
                             final DuoSwipeRepository duoSwipeRepository,
                             final DuoMatchRepository duoMatchRepository,
-                            final DuoProfileService duoProfileService)
+                            final DuoProfileService duoProfileService,
+                            final DuoService duoService)
     {
         this.duoProfileRepository = duoProfileRepository;
         this.duoSwipeRepository = duoSwipeRepository;
         this.duoMatchRepository = duoMatchRepository;
         this.duoProfileService = duoProfileService;
+        this.duoService = duoService;
     }
 
     /**
@@ -112,6 +116,22 @@ public class DiscoveryService
                         duoProfileService.isCompatibleLookingFor(
                                 currentDuo.getLookingFor(),
                                 duoProfile.getLookingFor()))
+                .toList();
+    }
+
+    /**
+     * Retrieves eligible duos in the format expected by the frontend.
+     *
+     * @param currentDuoId the ID of the current duo
+     * @return eligible duo responses
+     */
+    public List<DuoResponse> getEligibleDuoResponses(final String currentDuoId)
+    {
+        return getEligibleDuoProfiles(currentDuoId)
+                .stream()
+                .map(duoProfile ->
+                        duoService.getDuoResponse(duoProfile.getDuoId()))
+                .filter(duoResponse -> duoResponse != null)
                 .toList();
     }
 }

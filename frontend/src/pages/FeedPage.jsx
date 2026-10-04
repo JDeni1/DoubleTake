@@ -19,7 +19,7 @@ export default function FeedPage() {
   const [swipedIds, setSwipedIds] = useState([])
   const [isSwiping, setIsSwiping] = useState(false)
   const [swipeError, setSwipeError] = useState('')
-
+4
   // Load your duo (for shared interests) and the feed at the same time.
   const loadFeed = useCallback(async () => {
     const [myDuo, feed] = await Promise.all([getDuo(currentDuoId), getFeed(currentDuoId)])
