@@ -1,5 +1,5 @@
-import { request } from './httpClient.js'
-import * as mockApi from '../mocks/mockApi.js'
+import { request } from './httpCLient.js'
+import * as mockApi from '../mocks/mockAPI.js'
 
 /**
  * When true, every function below returns fake data from src/mocks instead of

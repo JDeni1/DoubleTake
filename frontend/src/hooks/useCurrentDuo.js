@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { CurrentDuoContext } from '../context/currentDuoContext.js'
+import { CurrentDuoContext } from '../context/CurrentDuoContext.jsx'
 
 /**
  * Gets the current user and duo from anywhere in the app.

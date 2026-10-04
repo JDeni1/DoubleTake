@@ -11,7 +11,7 @@ const VARIANT_CLASSES = {
  * Pill-shaped button for every main action.
  * Any other prop (onClick, disabled, type, aria-label...) is passed to the <button>.
  */
-export default function Button({ variant = 'primary', fullWidth = false, type = 'button', className = '', children, ...rest }) {
+ function Button({ variant = 'primary', fullWidth = false, type = 'button', className = '', children, ...rest }) {
   return (
     <button
       type={type}
@@ -22,3 +22,4 @@ export default function Button({ variant = 'primary', fullWidth = false, type = 
     </button>
   )
 }
+export default Button
