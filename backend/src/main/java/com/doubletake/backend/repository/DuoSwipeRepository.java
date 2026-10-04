@@ -20,4 +20,15 @@ public interface DuoSwipeRepository extends JpaRepository<DuoSwipe, Long>
             String swiperDuoId,
             String targetDuoId,
             DuoSwipe.SwipeDirection swipeDirection);
+
+    /**
+     * Checks whether the current duo has already swiped on a target duo.
+     *
+     * @param swiperDuoId the ID of the duo that performed the swipe
+     * @param targetDuoId the ID of the duo that was swiped on
+     * @return true if a swipe already exists between the two duos, false otherwise
+     */
+    boolean existsBySwiperDuoIdAndTargetDuoId(
+            String swiperDuoId,
+            String targetDuoId);
 }
