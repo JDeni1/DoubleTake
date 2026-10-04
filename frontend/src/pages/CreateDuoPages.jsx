@@ -5,7 +5,7 @@ import Button from '../components/Button.jsx'
 import { IconCheck, IconSearch } from '../components/Icons.jsx'
 import StatusMessage from '../components/StatusMessage.jsx'
 import TopBar from '../components/TopBar.jsx'
-import { useApiData } from '../hooks/useApiData.js'
+import { useApiData } from '../hooks/useAPIData.js'
 import { useCurrentDuo } from '../hooks/useCurrentDuo.js'
 import { createDuo, getUsers } from '../lib/api.js'
 
