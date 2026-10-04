@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 import Button from '../components/Button.jsx'
-import DuoVenn from '../components/DuoVenn.jsx'
+import DuoHearts from '../components/DuoHearts.jsx'
 import Logo from '../components/Logo.jsx'
 import { useCurrentDuo } from '../hooks/useCurrentDuo.js'
 
@@ -21,7 +21,7 @@ export default function WelcomePage() {
       <Logo />
 
       <div className="flex flex-1 flex-col justify-center gap-7 py-8">
-        <DuoVenn />
+        <DuoHearts />
         <div className="flex flex-col gap-3.5">
           <h1 className="font-display text-[38px] leading-[1.05] font-bold tracking-tight">
             Better first dates, with your best friend there too.

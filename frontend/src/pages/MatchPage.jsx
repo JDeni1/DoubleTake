@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import Button from '../components/Button.jsx'
-import DuoVenn from '../components/DuoVenn.jsx'
+import DuoVenn from '../components/DuoHearts.jsx'
 import Logo from '../components/Logo.jsx'
 import StatusMessage from '../components/StatusMessage.jsx'
 import { useApiData } from '../hooks/useAPIData.js'
