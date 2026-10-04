@@ -44,7 +44,6 @@ function FriendOption({ user, isSelected, onSelect }) {
 
 /**
  * Sign-up step 2: pick the friend who completes your duo.
- * Route: /duo/create. Loads GET /api/users, sends POST /api/duos.
  */
 export default function CreateDuoPage() {
   const navigate = useNavigate()
@@ -65,9 +64,6 @@ export default function CreateDuoPage() {
   )
   const selectedFriend = users?.find((user) => user.id === selectedId) ?? null
 
-  /**
-   * Creates the duo with the chosen friend and moves to step 3.
-   */
   async function handleTeamUp() {
     setIsSaving(true)
     setSaveError('')
