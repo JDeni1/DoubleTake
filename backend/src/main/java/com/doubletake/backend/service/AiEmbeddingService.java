@@ -23,15 +23,16 @@ public class AiEmbeddingService {
     }
 
     /**
-     * Generates a 1536-dimensional vector from the combined vibe text using OpenAI.
+     * Generates a 1536-dimensional vector from text using OpenAI
+     * and returns it as a formatted String ready for TiDB.
      */
-    public List<Double> generateEmbedding(String combinedVibeText) {
+    @SuppressWarnings("unchecked")
+    public String generateEmbedding(String combinedVibeText) {
         Map<String, Object> requestBody = Map.of(
                 "model", "text-embedding-3-small",
                 "input", combinedVibeText
         );
 
-        // Call OpenAI Embeddings API
         Map<String, Object> response = restClient.post()
                 .uri("/embeddings")
                 .header("Authorization", "Bearer " + openAiApiKey)
@@ -40,11 +41,11 @@ public class AiEmbeddingService {
                 .retrieve()
                 .body(Map.class);
 
-        // Parse the vector array out of the JSON response
         if (response != null && response.containsKey("data")) {
             List<Map<String, Object>> data = (List<Map<String, Object>>) response.get("data");
             if (!data.isEmpty()) {
-                return (List<Double>) data.get(0).get("embedding");
+                List<Double> embedding = (List<Double>) data.get(0).get("embedding");
+                return embedding.toString(); // Returns "[0.012, -0.045, ...]" directly!
             }
         }
 
