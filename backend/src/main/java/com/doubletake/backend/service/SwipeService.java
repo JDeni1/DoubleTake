@@ -5,6 +5,9 @@ import com.doubletake.backend.entity.DuoMatch;
 import com.doubletake.backend.repository.DuoSwipeRepository;
 import org.springframework.stereotype.Service;
 import com.doubletake.backend.entity.DuoSwipe;
+import com.doubletake.backend.dto.SwipeResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class SwipeService
@@ -38,28 +41,42 @@ public class SwipeService
     }
 
     /**
-     * Processes a swipe by saving it and creating a match if both duos liked each other.
+     * Saves a like or pass and creates a match if both duos liked each other.
      *
-     * @param currentDuoId the ID of the duo performing the swipe
-     * @param targetDuoId the ID of the duo being swiped on
-     * @param swipeDirection whether the swipe is a LIKE or PASS
-     * @return the created match if a mutual like occurs, otherwise null
+     * @param currentDuoId the duo making the swipe
+     * @param targetDuoId the duo being swiped on
+     * @param swipeDirection the like or pass decision
+     * @return the result of the swipe
      */
-    public DuoMatch processSwipe(final String currentDuoId,
-                                 final String targetDuoId,
-                                 final DuoSwipe.SwipeDirection swipeDirection)
+    public SwipeResponse processSwipe(
+            final String currentDuoId,
+            final String targetDuoId,
+            final DuoSwipe.SwipeDirection swipeDirection)
     {
-        saveSwipe(currentDuoId,
-                targetDuoId,
-                swipeDirection);
+        if(duoSwipeRepository.existsBySwiperDuoIdAndTargetDuoId(
+                currentDuoId,
+                targetDuoId))
+        {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "You've already swiped on this duo.");
+        }
+
+        saveSwipe(currentDuoId, targetDuoId, swipeDirection);
 
         if(swipeDirection == DuoSwipe.SwipeDirection.LIKE &&
                 hasReciprocalLike(currentDuoId, targetDuoId))
         {
-            return matchService.createMatch(currentDuoId, targetDuoId);
+            final DuoMatch match =
+                    matchService.createMatch(currentDuoId, targetDuoId);
+
+            if(match != null)
+            {
+                return new SwipeResponse(true, match.getId());
+            }
         }
 
-        return null;
+        return new SwipeResponse(false, null);
     }
 
 

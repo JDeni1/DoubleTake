@@ -3,6 +3,9 @@ package com.doubletake.backend.service;
 import com.doubletake.backend.entity.UserProfile;
 import com.doubletake.backend.repository.UserProfileRepository;
 import org.springframework.stereotype.Service;
+import com.doubletake.backend.dto.UserResponse;
+
+import java.util.List;
 
 import java.util.Map;
 
@@ -91,6 +94,24 @@ public class UserProfileService
     public boolean hasInterests(final Map<String, Object> interests)
     {
         return interests != null && !interests.isEmpty();
+    }
+
+    /**
+     * Retrieves all users in the format expected by the frontend.
+     *
+     * @return all user responses
+     */
+    public List<UserResponse> getAllUsers()
+    {
+        return userProfileRepository.findAll()
+                .stream()
+                .map(user -> new UserResponse(
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getAge(),
+                        null,
+                        user.getInterests().keySet().stream().toList()))
+                .toList();
     }
 
 }

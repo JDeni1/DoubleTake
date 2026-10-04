@@ -11,6 +11,7 @@ import com.doubletake.backend.repository.DuoProfileRepository;
 import com.doubletake.backend.repository.UserProfileRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -67,17 +68,14 @@ public class DuoService
     }
 
     /**
-     * Creates and saves a new duo if the two users are different
-     * and neither user already belongs to another duo.
+     * Creates and saves a new duo.
      *
-     * @param duoId the ID of the new duo
      * @param userAId the ID of the first user
      * @param userBId the ID of the second user
-     * @return the created duo, or null if the duo cannot be created
+     * @return the created duo response, or null if the duo cannot be created
      */
-    public Duo createDuo(final String duoId,
-                         final String userAId,
-                         final String userBId)
+    public DuoResponse createDuo(final String userAId,
+                                 final String userBId)
     {
         if(!canFormDuo(userAId, userBId))
         {
@@ -89,12 +87,16 @@ public class DuoService
             return null;
         }
 
+        final String duoId = UUID.randomUUID().toString();
+
         final Duo duo = new Duo(
                 duoId,
                 userAId,
                 userBId);
 
-        return duoRepository.save(duo);
+        duoRepository.save(duo);
+
+        return getDuoResponse(duoId);
     }
 
     /**
@@ -140,14 +142,14 @@ public class DuoService
                 userA.getFirstName(),
                 userA.getAge(),
                 null,
-                userA.getInterests());
+                userA.getInterests().keySet().stream().toList());
 
         final UserResponse userBResponse = new UserResponse(
                 userB.getUserId(),
                 userB.getFirstName(),
                 userB.getAge(),
                 null,
-                userB.getInterests());
+                userB.getInterests().keySet().stream().toList());
 
         final DuoProfile duoProfile =
                 duoProfileRepository.findById(duoId).orElse(null);
@@ -164,5 +166,38 @@ public class DuoService
                 duo.getDuoId(),
                 duoBio,
                 List.of(userAResponse, userBResponse));
+    }
+
+    /**
+     * Updates a duo's bio and returns the updated duo response.
+     *
+     * @param duoId the ID of the duo
+     * @param duoBio the updated duo bio
+     * @return the updated duo response, or null if the duo does not exist
+     */
+    public DuoResponse updateDuo(final String duoId,
+                                 final String duoBio)
+    {
+        final Duo duo = duoRepository.findById(duoId).orElse(null);
+
+        if(duo == null)
+        {
+            return null;
+        }
+
+        DuoProfile duoProfile =
+                duoProfileRepository.findById(duoId).orElse(null);
+
+        if(duoProfile == null)
+        {
+            duoProfile = new DuoProfile();
+            duoProfile.setDuoId(duoId);
+        }
+
+        duoProfile.setCombinedVibeText(duoBio);
+
+        duoProfileRepository.save(duoProfile);
+
+        return getDuoResponse(duoId);
     }
 }

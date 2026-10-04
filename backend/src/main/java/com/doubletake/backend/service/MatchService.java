@@ -3,17 +3,23 @@ package com.doubletake.backend.service;
 import com.doubletake.backend.entity.DuoMatch;
 import com.doubletake.backend.repository.DuoMatchRepository;
 import org.springframework.stereotype.Service;
+import com.doubletake.backend.dto.DuoResponse;
+import com.doubletake.backend.dto.MatchResponse;
 
+import java.util.List;
 import java.util.List;
 
 @Service
 public class MatchService
 {
     private final DuoMatchRepository duoMatchRepository;
+    private final DuoService duoService;
 
-    public MatchService(final DuoMatchRepository duoMatchRepository)
+    public MatchService(final DuoMatchRepository duoMatchRepository,
+                        final DuoService duoService)
     {
         this.duoMatchRepository = duoMatchRepository;
+        this.duoService = duoService;
     }
 
     /**
@@ -79,5 +85,33 @@ public class MatchService
         return duoMatchRepository.findByDuoAIdOrDuoBId(
                 duoId,
                 duoId);
+    }
+
+    /**
+     * Retrieves matches in the format expected by the frontend.
+     *
+     * @param duoId the current duo ID
+     * @return matches containing the other duo's information
+     */
+    public List<MatchResponse> getMatchResponses(final String duoId)
+    {
+        return duoMatchRepository.findByDuoAIdOrDuoBId(duoId, duoId)
+                .stream()
+                .map(match ->
+                {
+                    final String otherDuoId =
+                            match.getDuoAId().equals(duoId)
+                                    ? match.getDuoBId()
+                                    : match.getDuoAId();
+
+                    final DuoResponse otherDuo =
+                            duoService.getDuoResponse(otherDuoId);
+
+                    return new MatchResponse(
+                            match.getId(),
+                            otherDuo,
+                            match.getMatchedAt());
+                })
+                .toList();
     }
 }

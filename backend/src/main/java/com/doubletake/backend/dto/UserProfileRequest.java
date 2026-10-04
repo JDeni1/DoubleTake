@@ -1,36 +1,23 @@
 package com.doubletake.backend.dto;
 
-import java.util.Map;
+import java.util.List;
 
-/**
- * Stores user profile data sent from the frontend.
- */
 public class UserProfileRequest
 {
-    private String userId;
-    private String firstName;
+    private String name;
     private Integer age;
     private String bio;
-    private Map<String, Object> interests;
+    private List<String> interests;
+    private String imageUrl;
 
-    public String getUserId()
+    public String getName()
     {
-        return userId;
+        return name;
     }
 
-    public void setUserId(final String userId)
+    public void setName(final String name)
     {
-        this.userId = userId;
-    }
-
-    public String getFirstName()
-    {
-        return firstName;
-    }
-
-    public void setFirstName(final String firstName)
-    {
-        this.firstName = firstName;
+        this.name = name;
     }
 
     public Integer getAge()
@@ -53,13 +40,23 @@ public class UserProfileRequest
         this.bio = bio;
     }
 
-    public Map<String, Object> getInterests()
+    public List<String> getInterests()
     {
         return interests;
     }
 
-    public void setInterests(final Map<String, Object> interests)
+    public void setInterests(final List<String> interests)
     {
         this.interests = interests;
+    }
+
+    public String getImageUrl()
+    {
+        return imageUrl;
+    }
+
+    public void setImageUrl(final String imageUrl)
+    {
+        this.imageUrl = imageUrl;
     }
 }
