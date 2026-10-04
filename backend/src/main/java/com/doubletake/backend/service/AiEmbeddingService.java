@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.List;
 import java.util.Map;
@@ -14,40 +15,47 @@ public class AiEmbeddingService {
     private final RestClient restClient;
 
     @Value("${openai.api.key}")
-    private String openAiApiKey;
+    private String cohereApiKey;
 
-    public AiEmbeddingService(RestClient.Builder restClientBuilder) {
-        this.restClient = restClientBuilder
-                .baseUrl("https://api.openai.com/v1")
-                .build();
+    public AiEmbeddingService() {
+        this.restClient = RestClient.create();
     }
 
-    /**
-     * Generates a 1536-dimensional vector from the combined vibe text using OpenAI.
-     */
-    public List<Double> generateEmbedding(String combinedVibeText) {
+    @SuppressWarnings("unchecked")
+    public String generateEmbedding(String combinedVibeText) {
+        String cleanKey = cohereApiKey != null ? cohereApiKey.replace("\"", "").trim() : "";
+
+        // Cohere API payload using their lightweight embed model (384 dimensions)
         Map<String, Object> requestBody = Map.of(
-                "model", "text-embedding-3-small",
-                "input", combinedVibeText
+                "texts", List.of(combinedVibeText),
+                "model", "embed-english-light-v3.0",
+                "input_type", "search_document"
         );
 
-        // Call OpenAI Embeddings API
-        Map<String, Object> response = restClient.post()
-                .uri("/embeddings")
-                .header("Authorization", "Bearer " + openAiApiKey)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(requestBody)
-                .retrieve()
-                .body(Map.class);
+        String endpointUrl = "https://api.cohere.com/v1/embed";
 
-        // Parse the vector array out of the JSON response
-        if (response != null && response.containsKey("data")) {
-            List<Map<String, Object>> data = (List<Map<String, Object>>) response.get("data");
-            if (!data.isEmpty()) {
-                return (List<Double>) data.get(0).get("embedding");
+        try {
+            Map<String, Object> response = restClient.post()
+                    .uri(endpointUrl)
+                    .header("Authorization", "Bearer " + cleanKey)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .body(Map.class);
+
+            if (response != null && response.containsKey("embeddings")) {
+                List<List<Double>> embeddings = (List<List<Double>>) response.get("embeddings");
+                if (embeddings != null && !embeddings.isEmpty()) {
+                    List<Double> values = embeddings.get(0);
+                    return values.toString(); // Returns formatted vector string [0.0123, -0.0456, ...]
+                }
             }
+        } catch (RestClientResponseException e) {
+            System.err.println("❌ Cohere API Error Status: " + e.getStatusCode());
+            System.err.println("❌ Cohere Response Body: " + e.getResponseBodyAsString());
+            throw new RuntimeException("Cohere API call failed: " + e.getResponseBodyAsString(), e);
         }
 
-        throw new RuntimeException("Failed to generate embedding from OpenAI API");
+        throw new RuntimeException("Failed to generate embedding from Cohere API");
     }
 }
