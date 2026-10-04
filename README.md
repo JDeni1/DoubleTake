@@ -4,7 +4,7 @@ Better first dates, with your best friend there too.
 
 DoubleTake is a dating platform that lets you partner up with your best friend and match with another pair. Instead of the interview-like process of regular dating apps, which focus on individual profiles and the same dry pickup lines, DoubleTake turns the first date into a double date. It's safer, less pressure, and a lot more fun, because your best friend comes too.
 
-Built in one weekend at **StormHacks 2026**, and submitted to the **TiDB x AI Open Build** track.
+Built in one weekend at **StormHacks 2026**, and submitted to the **TiDB x AI Open Build** track and **WiCS - WiCS Cosmos** Track .
 
 ## Live Site
 
