@@ -2,43 +2,50 @@ package com.doubletake.backend.dto;
 
 import com.doubletake.backend.entity.DuoSwipe;
 
-/**
- * Stores the data sent by the frontend when a duo performs a swipe.
- */
 public class SwipeRequest
 {
-    private String currentDuoId;
-    private String targetDuoId;
-    private DuoSwipe.SwipeDirection swipeDirection;
+    private String fromDuoId;
+    private String toDuoId;
+    private String likedByUserId;
+    private DuoSwipe.SwipeDirection decision;
 
-    public String getCurrentDuoId()
+    public String getFromDuoId()
     {
-        return currentDuoId;
+        return fromDuoId;
     }
 
-    public void setCurrentDuoId(final String currentDuoId)
+    public void setFromDuoId(final String fromDuoId)
     {
-        this.currentDuoId = currentDuoId;
+        this.fromDuoId = fromDuoId;
     }
 
-    public String getTargetDuoId()
+    public String getToDuoId()
     {
-        return targetDuoId;
+        return toDuoId;
     }
 
-    public void setTargetDuoId(final String targetDuoId)
+    public void setToDuoId(final String toDuoId)
     {
-        this.targetDuoId = targetDuoId;
+        this.toDuoId = toDuoId;
     }
 
-    public DuoSwipe.SwipeDirection getSwipeDirection()
+    public String getLikedByUserId()
     {
-        return swipeDirection;
+        return likedByUserId;
     }
 
-    public void setSwipeDirection(
-            final DuoSwipe.SwipeDirection swipeDirection)
+    public void setLikedByUserId(final String likedByUserId)
     {
-        this.swipeDirection = swipeDirection;
+        this.likedByUserId = likedByUserId;
+    }
+
+    public DuoSwipe.SwipeDirection getDecision()
+    {
+        return decision;
+    }
+
+    public void setDecision(final DuoSwipe.SwipeDirection decision)
+    {
+        this.decision = decision;
     }
 }

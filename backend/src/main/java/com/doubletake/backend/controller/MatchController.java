@@ -3,6 +3,7 @@ package com.doubletake.backend.controller;
 import com.doubletake.backend.entity.DuoMatch;
 import com.doubletake.backend.service.MatchService;
 import org.springframework.web.bind.annotation.*;
+import com.doubletake.backend.dto.MatchResponse;
 
 import java.util.List;
 
@@ -17,16 +18,10 @@ public class MatchController
         this.matchService = matchService;
     }
 
-    /**
-     * Retrieves all matches involving the specified duo.
-     *
-     * @param duoId the ID of the duo whose matches are being retrieved
-     * @return a list of matches involving the duo
-     */
     @GetMapping("/{duoId}")
-    public List<DuoMatch> getMatchesForDuo(
+    public List<MatchResponse> getMatchesForDuo(
             @PathVariable final String duoId)
     {
-        return matchService.getMatchesForDuo(duoId);
+        return matchService.getMatchResponses(duoId);
     }
 }

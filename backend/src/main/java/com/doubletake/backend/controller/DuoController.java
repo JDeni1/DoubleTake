@@ -8,6 +8,7 @@ import com.doubletake.backend.dto.DuoResponse;
 import com.doubletake.backend.service.DiscoveryService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/duos")
@@ -27,15 +28,14 @@ public class DuoController
      * Creates a new duo using two users sent from the frontend.
      *
      * @param request the duo creation information sent by the frontend
-     * @return the created duo, or null if the duo cannot be created
+     * @return the created duo
      */
     @PostMapping
-    public Duo createDuo(@RequestBody final DuoRequest request)
+    public DuoResponse createDuo(@RequestBody final DuoRequest request)
     {
         return duoService.createDuo(
-                request.getDuoId(),
-                request.getUserAId(),
-                request.getUserBId());
+                request.getUser1Id(),
+                request.getUser2Id());
     }
 
     /**
@@ -60,5 +60,23 @@ public class DuoController
     public List<DuoResponse> getFeed(@PathVariable final String duoId)
     {
         return discoveryService.getEligibleDuoResponses(duoId);
+    }
+
+    @PutMapping("/{duoId}")
+    public DuoResponse updateDuo(
+            @PathVariable final String duoId,
+            @RequestBody final Map<String, String> changes)
+    {
+        return duoService.updateDuo(
+                duoId,
+                changes.get("duoBio"));
+    }
+
+    @GetMapping("/search")
+    public List<DuoResponse> searchDuos(
+            @RequestParam final String q,
+            @RequestParam final String duoId)
+    {
+        return discoveryService.searchDuoResponses(q, duoId);
     }
 }

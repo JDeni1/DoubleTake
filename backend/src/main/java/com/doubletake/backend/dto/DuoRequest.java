@@ -1,41 +1,38 @@
 package com.doubletake.backend.dto;
 
-/**
- * Stores duo creation data sent from the frontend.
- */
 public class DuoRequest
 {
-    private String duoId;
-    private String userAId;
-    private String userBId;
+    private String user1Id;
+    private String user2Id;
+    private String duoBio;
 
-    public String getDuoId()
+    public String getUser1Id()
     {
-        return duoId;
+        return user1Id;
     }
 
-    public void setDuoId(final String duoId)
+    public void setUser1Id(final String user1Id)
     {
-        this.duoId = duoId;
+        this.user1Id = user1Id;
     }
 
-    public String getUserAId()
+    public String getUser2Id()
     {
-        return userAId;
+        return user2Id;
     }
 
-    public void setUserAId(final String userAId)
+    public void setUser2Id(final String user2Id)
     {
-        this.userAId = userAId;
+        this.user2Id = user2Id;
     }
 
-    public String getUserBId()
+    public String getDuoBio()
     {
-        return userBId;
+        return duoBio;
     }
 
-    public void setUserBId(final String userBId)
+    public void setDuoBio(final String duoBio)
     {
-        this.userBId = userBId;
+        this.duoBio = duoBio;
     }
 }

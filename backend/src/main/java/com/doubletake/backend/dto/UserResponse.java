@@ -1,5 +1,6 @@
 package com.doubletake.backend.dto;
 
+import java.util.List;
 import java.util.Map;
 
 public class UserResponse
@@ -8,13 +9,13 @@ public class UserResponse
     private final String name;
     private final Integer age;
     private final String imageUrl;
-    private final Map<String, Object> interests;
+    private final List<String> interests;
 
     public UserResponse(final String id,
                         final String name,
                         final Integer age,
                         final String imageUrl,
-                        final Map<String, Object> interests)
+                        final List<String> interests)
     {
         this.id = id;
         this.name = name;
@@ -43,7 +44,7 @@ public class UserResponse
         return imageUrl;
     }
 
-    public Map<String, Object> getInterests()
+    public List<String> getInterests()
     {
         return interests;
     }

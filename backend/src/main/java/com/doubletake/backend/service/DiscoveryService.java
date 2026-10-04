@@ -134,4 +134,29 @@ public class DiscoveryService
                 .filter(duoResponse -> duoResponse != null)
                 .toList();
     }
+
+    /**
+     * Searches eligible duo profiles using the duo bio text.
+     *
+     * @param query the search text
+     * @param currentDuoId the current duo ID
+     * @return matching duos in the format expected by the frontend
+     */
+    public List<DuoResponse> searchDuoResponses(final String query,
+                                                final String currentDuoId)
+    {
+        final String searchText = query.toLowerCase();
+
+        return getEligibleDuoProfiles(currentDuoId)
+                .stream()
+                .filter(duoProfile ->
+                        duoProfile.getCombinedVibeText() != null &&
+                                duoProfile.getCombinedVibeText()
+                                        .toLowerCase()
+                                        .contains(searchText))
+                .map(duoProfile ->
+                        duoService.getDuoResponse(duoProfile.getDuoId()))
+                .filter(duoResponse -> duoResponse != null)
+                .toList();
+    }
 }

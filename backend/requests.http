@@ -181,3 +181,84 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/api/duos/test-duo-001/feed
+
+###
+GET http://localhost:8080/api/users
+
+###
+GET http://localhost:8080/api/matches/test-duo-001
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "userId": "test-user-d",
+  "firstName": "Emma",
+  "age": 22,
+  "bio": "Likes music and coffee",
+  "interests": {
+    "music": true,
+    "coffee": true
+  }
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "userId": "test-user-e",
+  "firstName": "Olivia",
+  "age": 23,
+  "bio": "Likes games and food",
+  "interests": {
+    "games": true,
+    "food": true
+  }
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "name": "Alex",
+  "age": 21,
+  "bio": "Testing frontend format",
+  "interests": ["Hiking", "Coffee"],
+  "imageUrl": null
+}
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "name": "Taylor",
+  "age": 22,
+  "bio": "Testing",
+  "interests": ["Music", "Coffee"],
+  "imageUrl": null
+}
+
+###
+POST http://localhost:8080/api/duos
+Content-Type: application/json
+
+{
+  "user1Id": "cc36433e-1ee3-470c-9606-3561ca27ad05",
+  "user2Id": "45d29b53-9a89-4057-aaa7-c041bae7fa98",
+  "duoBio": ""
+}
+
+###
+PUT http://localhost:8080/api/duos/e98be4bd-a031-40b3-935a-a2d055cf58c7
+Content-Type: application/json
+
+{
+  "duoBio": "We like coffee, music, and hiking"
+}
+
+###
+GET http://localhost:8080/api/duos/search?q=outdoorsy&duoId=test-duo-001
