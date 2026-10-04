@@ -28,6 +28,17 @@ public class UserProfileService
     }
 
     /**
+     * Saves a new user profile or updates an existing user profile in the database.
+     *
+     * @param userProfile the user profile to save
+     * @return the saved user profile
+     */
+    public UserProfile saveUserProfile(final UserProfile userProfile)
+    {
+        return userProfileRepository.save(userProfile);
+    }
+
+    /**
      * Validates the user's age.
      *
      * @param age user's age
