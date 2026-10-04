@@ -64,7 +64,7 @@ public class UserProfile {
         this.firstName = firstName;
     }
 
-    public Integer age() {
+    public Integer getAge() {
         return age;
     }
 
